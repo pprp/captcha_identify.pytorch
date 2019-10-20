@@ -14,7 +14,8 @@ from tqdm import *
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
-device = torch.device("cpu")
+# device = torch.device("cpu")
+device = torch_util.select_device()
 
 def main(model_path):
     cnn = CNN()
@@ -33,7 +34,7 @@ def main(model_path):
         pBar.update(1)
 
         image = images
-        vimage = Variable(image)
+        vimage = Variable(image).cuda()
         predict_label = cnn(vimage)
 
         c0 = settings.ALL_CHAR_SET[np.argmax(predict_label[0, 0:settings.ALL_CHAR_SET_LEN].data.numpy())]
@@ -61,7 +62,7 @@ def test_data(model_path):
     for i, (images, labels) in enumerate(test_dataloader):
 
         image = images
-        vimage = Variable(image)
+        vimage = Variable(image).cuda()
         predict_label = cnn(vimage)
 
         c0 = settings.ALL_CHAR_SET[np.argmax(predict_label[0, 0:settings.ALL_CHAR_SET_LEN].data.numpy())]

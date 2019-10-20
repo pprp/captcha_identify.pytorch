@@ -36,8 +36,8 @@ def main(args):
     train_dataloader = datasets.get_train_data_loader()
     for epoch in range(num_epochs):
         for i, (images, labels) in enumerate(train_dataloader):
-            images = Variable(images)
-            labels = Variable(labels.float())
+            images = Variable(images).cuda()
+            labels = Variable(labels.float()).cuda()
             predict_labels = cnn(images)
             loss = criterion(predict_labels, labels)
             optimizer.zero_grad()
