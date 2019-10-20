@@ -12,7 +12,7 @@ import os
 from models import *
 from tqdm import *
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 device = torch.device("cpu")
 

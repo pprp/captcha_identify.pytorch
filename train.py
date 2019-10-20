@@ -4,22 +4,22 @@ import torch.nn as nn
 from torch.autograd import Variable
 import datasets
 from models import *
-# import torch_util
+import torch_util
 import os, shutil
 import argparse
 import test
 import torchvision
 import settings
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 
 # Hyper Parameters
 num_epochs = 300
 batch_size = 20
 learning_rate = 0.001
 
-# device = torch_util.select_device()
-device = torch.device("cpu")
+device = torch_util.select_device()
+# device = torch.device("cpu")
 
 def main(args):
     cnn = CNN().to(device)
