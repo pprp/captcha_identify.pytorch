@@ -1,5 +1,5 @@
 import torch
-
+import matplotlib.pyplot as plt
 
 def init_seeds(seed=0):
     torch.manual_seed(seed)
@@ -26,4 +26,22 @@ def select_device(force_cpu=False):
     print('')  # skip a line
     return device
 
+def plot_result():
+    fig = plt.figure(15)
+    with open("results.txt", "r") as f:
+        import csv
+        f_csv = csv.reader(f)
+        epoch , acc = [], []
+        for row in f_csv:
+            print(row)
+            epoch.append(int(row[0]))
+            acc.append(float(row[1]))
+        plt.plot(epoch, acc)
+    plt.title("result-epoch&acc") 
+    plt.xlabel("epoch") 
+    plt.ylabel("accuracy") 
+    plt.show()
+    fig.savefig("results.png", dpi=300)
 
+if __name__=="__main__":
+    plot_result()
