@@ -2,7 +2,7 @@
 import torch.nn as nn
 import settings
 import torchvision.models as models
-
+import torchvision
 # CNN Model (2 conv layer)
 class CNN(nn.Module):
     def __init__(self):
@@ -102,7 +102,7 @@ class ALEXNET(nn.Module):
         super(ALEXNET, self).__init__()
         self.num_cls = settings.MAX_CAPTCHA*settings.ALL_CHAR_SET_LEN
         self.base = torchvision.models.alexnet(pretrained=False)
-        self.base.fc = nn.Linear(self.base.fc.in_features, self.num_cls)
+        self.base.classifier[-1] = nn.Linear(4096, self.num_cls)
     def forward(self, x):
         out = self.base(x)
         return out
@@ -112,7 +112,7 @@ class VGG11(nn.Module):
         super(VGG11, self).__init__()
         self.num_cls = settings.MAX_CAPTCHA*settings.ALL_CHAR_SET_LEN
         self.base = torchvision.models.vgg11(pretrained=False)
-        self.base.fc = nn.Linear(self.base.fc.in_features, self.num_cls)
+        self.base.classifier[-1] = nn.Linear(4096, self.num_cls)
     def forward(self, x):
         out = self.base(x)
         return out
@@ -122,7 +122,7 @@ class VGG13(nn.Module):
         super(VGG13, self).__init__()
         self.num_cls = settings.MAX_CAPTCHA*settings.ALL_CHAR_SET_LEN
         self.base = torchvision.models.vgg13(pretrained=False)
-        self.base.fc = nn.Linear(self.base.fc.in_features, self.num_cls)
+        self.base.classifier[-1] = nn.Linear(4096, self.num_cls)
     def forward(self, x):
         out = self.base(x)
         return out
@@ -132,7 +132,7 @@ class VGG16(nn.Module):
         super(VGG16, self).__init__()
         self.num_cls = settings.MAX_CAPTCHA*settings.ALL_CHAR_SET_LEN
         self.base = torchvision.models.vgg16(pretrained=False)
-        self.base.fc = nn.Linear(self.base.fc.in_features, self.num_cls)
+        self.base.classifier[-1] = nn.Linear(4096, self.num_cls)
     def forward(self, x):
         out = self.base(x)
         return out
@@ -142,7 +142,7 @@ class VGG19(nn.Module):
         super(VGG19, self).__init__()
         self.num_cls = settings.MAX_CAPTCHA*settings.ALL_CHAR_SET_LEN
         self.base = torchvision.models.vgg19(pretrained=False)
-        self.base.fc = nn.Linear(self.base.fc.in_features, self.num_cls)
+        self.base.classifier[-1] = nn.Linear(4096, self.num_cls)
     def forward(self, x):
         out = self.base(x)
         return out
@@ -152,7 +152,7 @@ class SQUEEZENET(nn.Module):
         super(SQUEEZENET, self).__init__()
         self.num_cls = settings.MAX_CAPTCHA*settings.ALL_CHAR_SET_LEN
         self.base = torchvision.models.squeezenet1_0(pretrained=False)
-        self.base.fc = nn.Linear(self.base.fc.in_features, self.num_cls)
+        self.base.classifier[-3] = nn.Linear(512, self.num_cls)
     def forward(self, x):
         out = self.base(x)
         return out
@@ -162,7 +162,7 @@ class DENSE161(nn.Module):
         super(DENSE161, self).__init__()
         self.num_cls = settings.MAX_CAPTCHA*settings.ALL_CHAR_SET_LEN
         self.base = torchvision.models.densenet161(pretrained=False)
-        self.base.fc = nn.Linear(self.base.fc.in_features, self.num_cls)
+        self.base.classifier = nn.Linear(self.base.classifier.in_features, self.num_cls)
     def forward(self, x):
         out = self.base(x)
         return out
@@ -171,8 +171,8 @@ class MOBILENET(nn.Module):
     def __init__(self):
         super(MOBILENET, self).__init__()
         self.num_cls = settings.MAX_CAPTCHA*settings.ALL_CHAR_SET_LEN
-        self.base = torchvision.models.mobilenet(pretrained=False)
-        self.base.fc = nn.Linear(self.base.fc.in_features, self.num_cls)
+        self.base = torchvision.models.mobilenet_v2(pretrained=False)
+        self.base.classifier = nn.Linear(self.base.last_channel, self.num_cls)
     def forward(self, x):
         out = self.base(x)
         return out
