@@ -1,6 +1,7 @@
 深度学习识别验证码
 
 =========
+
 基于: https://github.com/dee1024/pytorch-captcha-recognition 进行修改
 
 本项目致力于使用神经网络来识别各种验证码。
