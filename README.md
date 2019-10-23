@@ -1,6 +1,4 @@
-深度学习识别验证码
-
-=========
+# 深度学习识别验证码
 
 基于: https://github.com/dee1024/pytorch-captcha-recognition 进行修改
 
@@ -76,9 +74,18 @@
     ```
     可以在控制台，看到预测输出的结果
     
+
+可视化
+===
+
+![results_res101](assets/results_res101.png)
+
 贡献
 ===
+
 我们期待你的 pull requests !
+
+有问题欢迎提出issue
 
 作者
 ===
