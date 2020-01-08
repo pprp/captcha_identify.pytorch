@@ -4,6 +4,10 @@
 
 本项目致力于使用神经网络来识别各种验证码。
 
+在这个库的基础上，进行了改动，添加了很多trick来增强识别效果，如attention机制，dual pooling, ibn模块，bnneck,center loss等。
+
+链接为：https://github.com/pprp/captcha.Pytorch
+
 改动
 ===
 - 添加了更多torchvision中支持的模型
@@ -89,10 +93,6 @@
 ===
 * __Dee Qiu__ <coolcooldee@gmail.com>
 * 补充：__pprp__ <1115957667@qq.com>
-
-其它
-===
-* __Github项目交流QQ群__ 570997546
 
 
 声明
