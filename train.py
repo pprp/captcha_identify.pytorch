@@ -9,13 +9,12 @@ import argparse
 import test
 import torchvision
 import settings
-
+from torch.nn.parallel import DataParallel
 
 # GPU / cpu
 IS_USE_GPU = 1
 # 将num_workers设置为等于计算机上的CPU数量
 worker_num = 8
-
 
 if IS_USE_GPU:
     import torch_util
@@ -27,18 +26,16 @@ if IS_USE_GPU:
 else:
     device = torch.device("cpu")
 
-
 # Hyper Parameters
 num_epochs = 50
 batch_size = 256
 learning_rate = 0.001
 
-
-
 def main(args):
     # RES18/CNN
     cnn = models.CNN()
     cnn = cnn.to(device)
+    cnn = DataParallel(cnn)
     
     cnn.train()
     criterion = nn.MultiLabelSoftMarginLoss()
@@ -87,5 +84,4 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     main(args)
-
-
+    
