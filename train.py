@@ -11,18 +11,20 @@ import test
 import torchvision
 import settings
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # Hyper Parameters
 num_epochs = 300
-batch_size = 20
+batch_size = 256
 learning_rate = 0.001
 
 # device = torch_util.select_device()
-device = torch.device("cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cpu")
 
 def main(args):
-    cnn = CNN().to(device)
+    # cnn = CNN().to(device)
+    cnn = RES18().to(device)
     
     cnn.train()
     criterion = nn.MultiLabelSoftMarginLoss()
@@ -36,8 +38,12 @@ def main(args):
     train_dataloader = datasets.get_train_data_loader()
     for epoch in range(num_epochs):
         for i, (images, labels) in enumerate(train_dataloader):
-            images = Variable(images)
-            labels = Variable(labels.float())
+            cnn = CNN().to(device)
+
+            # images = Variable(images)
+            # labels = Variable(labels.float())
+            images = Variable(images).to(device)
+            labels = Variable(labels.float()).to(device)
             predict_labels = cnn(images)
             loss = criterion(predict_labels, labels)
             optimizer.zero_grad()
