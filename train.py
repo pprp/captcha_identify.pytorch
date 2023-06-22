@@ -4,27 +4,37 @@ import torch.nn as nn
 from torch.autograd import Variable
 import datasets
 from models import *
-# import torch_util
 import os, shutil
 import argparse
 import test
 import torchvision
 import settings
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
+# GPU / cpu
+IS_USE_GPU = 1
+
+if IS_USE_GPU:
+    import torch_util
+    # 通过os.environ["CUDA_VISIBLE_DEVICES"]指定所要使用的显卡，如：
+    # os.environ["CUDA_VISIBLE_DEVICES"] = "3,2,0,1"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    device = torch_util.select_device()
+else:
+    device = torch.device("cpu")
+
 
 # Hyper Parameters
-num_epochs = 300
+num_epochs = 50
 batch_size = 256
 learning_rate = 0.001
 
-# device = torch_util.select_device()
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# device = torch.device("cpu")
 
 def main(args):
-    # cnn = CNN().to(device)
-    cnn = RES18().to(device)
+    # RES18
+    model_name = CNN
+    cnn = model_name()
+    cnn = cnn.to(device)
     
     cnn.train()
     criterion = nn.MultiLabelSoftMarginLoss()
@@ -38,12 +48,13 @@ def main(args):
     train_dataloader = datasets.get_train_data_loader()
     for epoch in range(num_epochs):
         for i, (images, labels) in enumerate(train_dataloader):
-            cnn = CNN().to(device)
-
-            # images = Variable(images)
-            # labels = Variable(labels.float())
-            images = Variable(images).to(device)
-            labels = Variable(labels.float()).to(device)
+            if IS_USE_GPU:
+                images = Variable(images).to(device)
+                labels = Variable(labels.float()).to(device)
+            else:
+                images = Variable(images)
+                labels = Variable(labels.float())
+                
             predict_labels = cnn(images)
             loss = criterion(predict_labels, labels)
             optimizer.zero_grad()
