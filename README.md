@@ -1,12 +1,17 @@
 # 深度学习识别验证码
+## Roadmap
+这个项目是我成功跑起来的第一个NN项目，我希望进行拓展。深度学习，其实就是训练一大堆数据（10^4量级），本项目的使用成本已经很低了。但总是可以优化的：
+- model里面有多个模型，他们的效果分别怎么样？有没有办法自动跑起来，然后给我一个结果？——计划中
+- 最终得到的，其实就是`model.pkl`，可以做成web_ui提供服务——计划中
+- 对GPU的压榨还不够狠。我情况是：batch_size=256，8个worker, GPU`3507MiB / 16160MiB |     35%   `，不过看CPU是400%，显然瓶颈在CPU——无法优化
+  
 
-基于: https://github.com/dee1024/pytorch-captcha-recognition 进行修改
+## 介绍
+- 本项目致力于使用神经网络来识别各种验证码。
+- 基于：https://github.com/pprp/captcha.Pytorch， pprp在这个库的基础上，进行了改动，添加了很多trick来增强识别效果，如attention机制，dual pooling, ibn模块，bnneck,center loss等。
+- pprp的项目又基于: https://github.com/dee1024/pytorch-captcha-recognition 
 
-本项目致力于使用神经网络来识别各种验证码。
 
-在这个库的基础上，进行了改动，添加了很多trick来增强识别效果，如attention机制，dual pooling, ibn模块，bnneck,center loss等。
-
-链接为：https://github.com/pprp/captcha.Pytorch
 
 改动
 ===
