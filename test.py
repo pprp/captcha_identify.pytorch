@@ -49,7 +49,9 @@ def main(model_path):
             # print('Test Accuracy of the model on the %d test images: %f %%' % (total, 100 * correct / total))
     print('Test Accuracy of the model on the %d test images: %f %%' % (total, 100 * correct / total))
 
+
 def test_data(model_path):
+    plot_result()
     cnn = CNN()
     cnn.eval()
     cnn.load_state_dict(torch.load(model_path, map_location=device))
@@ -80,7 +82,7 @@ def test_data(model_path):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="test path")
-    parser.add_argument('--model-path', type=str, default="weights/cnn_1.pt")
+    parser.add_argument('--model-path', type=str, default="weights/cnn_best.pt")
 
     args = parser.parse_args()
     main(args.model_path)

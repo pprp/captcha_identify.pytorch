@@ -78,7 +78,7 @@
 
 - __步骤五：使用模型做预测__
     ```bash
-    python predict.py
+    python predict.py --model-path weights/cnn_best.pt 
     ```
     可以在控制台，看到预测输出的结果
     

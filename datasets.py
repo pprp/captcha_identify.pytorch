@@ -5,6 +5,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 import one_hot_encoding as ohe
 import settings
+from train import worker_num
 import numpy as np
 import cv2 as cv
 
@@ -40,7 +41,7 @@ transform = transforms.Compose([
 ])
 def get_train_data_loader():
     dataset = mydataset(settings.TRAIN_DATASET_PATH, transform=transform)
-    return DataLoader(dataset, batch_size=64, shuffle=True)
+    return DataLoader(dataset, batch_size=256, shuffle=True, num_workers=worker_num)
 
 def get_test_data_loader():
     dataset = mydataset(settings.TEST_DATASET_PATH, transform=transform)
