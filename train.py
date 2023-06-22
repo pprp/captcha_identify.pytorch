@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import datasets
-from models import *
+import models
 import os, shutil
 import argparse
 import test
@@ -13,13 +13,17 @@ import settings
 
 # GPU / cpu
 IS_USE_GPU = 1
+# 将num_workers设置为等于计算机上的CPU数量
+worker_num = 8
+
 
 if IS_USE_GPU:
     import torch_util
     # 通过os.environ["CUDA_VISIBLE_DEVICES"]指定所要使用的显卡，如：
     # os.environ["CUDA_VISIBLE_DEVICES"] = "3,2,0,1"
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
     device = torch_util.select_device()
+
 else:
     device = torch.device("cpu")
 
@@ -30,10 +34,10 @@ batch_size = 256
 learning_rate = 0.001
 
 
+
 def main(args):
-    # RES18
-    model_name = CNN
-    cnn = model_name()
+    # RES18/CNN
+    cnn = models.CNN()
     cnn = cnn.to(device)
     
     cnn.train()
@@ -54,7 +58,7 @@ def main(args):
             else:
                 images = Variable(images)
                 labels = Variable(labels.float())
-                
+
             predict_labels = cnn(images)
             loss = criterion(predict_labels, labels)
             optimizer.zero_grad()
