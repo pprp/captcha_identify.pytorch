@@ -30,7 +30,7 @@ else:
 
 # Hyper Parameters
 num_epochs = 100
-batch_size = 256
+batch_size = 512
 learning_rate = 0.001
 
 
@@ -51,12 +51,12 @@ def clean_unvalid_png():
                 os.remove(file)
         print(f"{dir}   [+{ok} / -{fail}]")
 
+str_name = "cnn"
+base_prefix = f"./weights/{str_name}"
 
 def main(args):
     # RES18/CNN
-    model_name = "CNN"
-    base_name = f"weights/{model_name}"
-    cnn = models.model_name()
+    cnn =  models.CNN()
     cnn = cnn.to(device)
     cnn = DataParallel(cnn)
     
@@ -84,26 +84,29 @@ def main(args):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            epoch_name = "./%s_%03g.pt" % (base_prefix, epoch)
             if (i+1) % 2 == 0:
                 print("epoch: %03g \t step: %03g \t loss: %.5f \t\r" % (epoch, i+1, loss.item()))
-                torch.save(cnn.state_dict(), f"./{base_name}_%03g.pt" % epoch)
+                torch.save(cnn.state_dict(), epoch_name)
         print("epoch: %03g \t step: %03g \t loss: %.5f \t" % (epoch, i, loss.item()))
-        torch.save(cnn.state_dict(), f"./{base_name}_%03g.pt" % epoch)
-        acc = test.test_data(f"./{base_name}_%03g.pt" % epoch)
+        torch.save(cnn.state_dict(), epoch_name)
+        print(epoch_name)
+        acc = test.test_data(epoch_name)
         if max_acc < acc:
             print("update accuracy %.5f." % acc)
             max_acc = acc
-            shutil.copy(f"./{base_name}_%03g.pt" % epoch, f"./{base_name}_best.pt")
+            shutil.copy(epoch_name, f"{base_prefix}_best.pt")
         else:
             print("do not update %.5f." % acc)
         
-    torch.save(cnn.state_dict(), f"./{base_name}_last.pt")
+    torch.save(cnn.state_dict(), f"{base_prefix}_last.pt")
     print("save last model")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="load path")
-    parser.add_argument('--model-path', type=str, default="./{base_name}_0.pt")
+    parser.add_argument('--model-path', type=str, default=f"{base_prefix}_0.pt")
     parser.add_argument('--resume',action='store_true')
     args = parser.parse_args()
-    clean_unvalid_png()
+    # don't clean 
+    # clean_unvalid_png()
     main(args)
