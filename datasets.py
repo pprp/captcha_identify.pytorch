@@ -32,7 +32,6 @@ class mydataset(Dataset):
         return image, label
 
     
-
 transform = transforms.Compose([
     transforms.ColorJitter(),
     # transforms.Grayscale(),

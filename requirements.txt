@@ -1,3 +1,4 @@
 captcha
 torch
 tqdm
+Pillow

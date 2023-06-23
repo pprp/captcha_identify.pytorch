@@ -9,7 +9,9 @@ import argparse
 import test
 import torchvision
 import settings
+from PIL import Image
 from torch.nn.parallel import DataParallel
+
 
 # GPU / cpu
 IS_USE_GPU = 1
@@ -27,13 +29,34 @@ else:
     device = torch.device("cpu")
 
 # Hyper Parameters
-num_epochs = 50
+num_epochs = 100
 batch_size = 256
 learning_rate = 0.001
 
+
+def clean_unvalid_png():
+    print("clean_unvalid_png")
+    for dir in [settings.TRAIN_DATASET_PATH, settings.TEST_DATASET_PATH, settings.PREDICT_DATASET_PATH]:
+        ok = 0
+        fail = 0
+        dir = os.path.abspath(dir)
+        for file in os.listdir(dir):
+            file = os.path.join(dir, file)
+            try:
+                image = Image.open(file) 
+                ok += 1
+            except Exception as e:
+                fail += 1
+                # print(e)
+                os.remove(file)
+        print(f"{dir}   [+{ok} / -{fail}]")
+
+
 def main(args):
     # RES18/CNN
-    cnn = models.CNN()
+    model_name = "CNN"
+    base_name = f"weights/{model_name}"
+    cnn = models.model_name()
     cnn = cnn.to(device)
     cnn = DataParallel(cnn)
     
@@ -63,25 +86,24 @@ def main(args):
             optimizer.step()
             if (i+1) % 2 == 0:
                 print("epoch: %03g \t step: %03g \t loss: %.5f \t\r" % (epoch, i+1, loss.item()))
-                torch.save(cnn.state_dict(), "./weights/cnn_%03g.pt" % epoch)
+                torch.save(cnn.state_dict(), f"./{base_name}_%03g.pt" % epoch)
         print("epoch: %03g \t step: %03g \t loss: %.5f \t" % (epoch, i, loss.item()))
-        torch.save(cnn.state_dict(), "./weights/cnn_%03g.pt" % epoch)
-        acc = test.test_data("./weights/cnn_%03g.pt" % epoch)
+        torch.save(cnn.state_dict(), f"./{base_name}_%03g.pt" % epoch)
+        acc = test.test_data(f"./{base_name}_%03g.pt" % epoch)
         if max_acc < acc:
             print("update accuracy %.5f." % acc)
             max_acc = acc
-            shutil.copy("./weights/cnn_%03g.pt" % epoch, "./weights/cnn_best.pt")
+            shutil.copy(f"./{base_name}_%03g.pt" % epoch, f"./{base_name}_best.pt")
         else:
             print("do not update %.5f." % acc)
         
-    torch.save(cnn.state_dict(), "./weights/cnn_last.pt")
+    torch.save(cnn.state_dict(), f"./{base_name}_last.pt")
     print("save last model")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="load path")
-    parser.add_argument('--model-path', type=str, default="./weights/cnn_0.pt")
+    parser.add_argument('--model-path', type=str, default="./{base_name}_0.pt")
     parser.add_argument('--resume',action='store_true')
-    
     args = parser.parse_args()
+    clean_unvalid_png()
     main(args)
-    

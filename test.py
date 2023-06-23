@@ -8,6 +8,7 @@ from models import *
 import one_hot_encoding
 import argparse
 import torch_util
+from torch_util import validate_image_by_try_load_image, plot_result
 import os
 from models import *
 from tqdm import *
@@ -51,7 +52,7 @@ def main(model_path):
 
 
 def test_data(model_path):
-    plot_result()
+    # plot_result()
     cnn = CNN()
     cnn.eval()
     cnn.load_state_dict(torch.load(model_path, map_location=device))
@@ -63,6 +64,8 @@ def test_data(model_path):
     for i, (images, labels) in enumerate(test_dataloader):
 
         image = images
+        if not validate_image_by_try_load_image(image):
+            continue 
         vimage = Variable(image)
         predict_label = cnn(vimage)
 

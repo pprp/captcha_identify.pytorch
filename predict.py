@@ -5,6 +5,8 @@ from torch.autograd import Variable
 #from visdom import Visdom # pip install Visdom
 import settings
 import datasets
+from torch_util import validate_image_by_try_load_image
+
 from models import CNN, RES18
 import argparse
 
@@ -22,6 +24,8 @@ def main():
     #vis = Visdom()
     for i, (images, labels) in enumerate(predict_dataloader):
         image = images
+        if not validate_image_by_try_load_image(image):
+            continue 
         vimage = Variable(image)
         predict_label = cnn(vimage)
 
