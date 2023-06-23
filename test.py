@@ -90,8 +90,6 @@ def test_data(model_path):
     for i, (images, labels) in enumerate(test_dataloader):
 
         image = images
-        if not validate_image_by_try_load_image(image):
-            continue 
         vimage = Variable(image)
         predict_label = cnn(vimage)
 
@@ -106,8 +104,8 @@ def test_data(model_path):
             correct += 1
         # if(total%200==0):
             # print('Test Accuracy of the model on the %d test images: %f %%' % (total, 100 * correct / total))
-    if not total or not correct:
-        return 0
+    # if not total or not correct:
+    #     return 0
     return 100 * correct / total
     # print('Test Accuracy of the model on the %d test images: %f %%' % (total, 100 * correct / total))
 

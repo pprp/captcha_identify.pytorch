@@ -84,7 +84,7 @@ def main(args):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            epoch_name = "./%s_%03g.pt" % (base_prefix, epoch)
+            epoch_name = "%s_%03g.pt" % (base_prefix, epoch)
             if (i+1) % 2 == 0:
                 print("epoch: %03g \t step: %03g \t loss: %.5f \t\r" % (epoch, i+1, loss.item()))
                 torch.save(cnn.state_dict(), epoch_name)
