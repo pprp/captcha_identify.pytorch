@@ -43,5 +43,17 @@ def plot_result():
     plt.show()
     fig.savefig("results.png", dpi=300)
 
+
+def validate_image_by_try_load_image(iamge_path):
+    try:
+        image = Image.open(iamge_path)
+        ret = True
+    except:
+        print("cannot identify image file %s" % iamge_path)
+        ret = False
+    return ret
+
+    
+
 if __name__=="__main__":
     plot_result()

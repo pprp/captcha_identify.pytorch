@@ -1,12 +1,11 @@
 # 深度学习识别验证码
 
-基于: https://github.com/dee1024/pytorch-captcha-recognition 进行修改
+## 介绍
+- 本项目致力于使用神经网络来识别各种验证码。
+- 基于：https://github.com/pprp/captcha.Pytorch， pprp在这个库的基础上，进行了改动，添加了很多trick来增强识别效果，如attention机制，dual pooling, ibn模块，bnneck,center loss等。
+- pprp的项目又基于: https://github.com/dee1024/pytorch-captcha-recognition 
 
-本项目致力于使用神经网络来识别各种验证码。
 
-在这个库的基础上，进行了改动，添加了很多trick来增强识别效果，如attention机制，dual pooling, ibn模块，bnneck,center loss等。
-
-链接为：https://github.com/pprp/captcha.Pytorch
 
 改动
 ===
@@ -72,7 +71,7 @@
 
 - __步骤五：使用模型做预测__
     ```bash
-    python predict.py
+    python predict.py --model-path weights/cnn_best.pt 
     ```
     可以在控制台，看到预测输出的结果
     

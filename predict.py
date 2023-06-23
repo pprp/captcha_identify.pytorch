@@ -3,9 +3,11 @@ import numpy as np
 import torch
 from torch.autograd import Variable
 #from visdom import Visdom # pip install Visdom
-import captcha_setting
+import settings
 import datasets
-from captcha_cnn_model import CNN
+from torch_util import validate_image_by_try_load_image
+
+from models import CNN, RES18
 import argparse
 
 def main():
@@ -13,8 +15,7 @@ def main():
     cnn.eval()
 
     parser = argparse.ArgumentParser(description="model path")
-    parser.add_argument("--model-path", type=str)
-    args = parser.parse_args()
+    parser.add_argument("--model-path", type=str, default="cnn_best.pt")
     
     cnn.load_state_dict(torch.load(args.model_path))
                                                                                                                                                          
@@ -23,13 +24,15 @@ def main():
     #vis = Visdom()
     for i, (images, labels) in enumerate(predict_dataloader):
         image = images
+        if not validate_image_by_try_load_image(image):
+            continue 
         vimage = Variable(image)
         predict_label = cnn(vimage)
 
-        c0 = captcha_setting.ALL_CHAR_SET[np.argmax(predict_label[0, 0:captcha_setting.ALL_CHAR_SET_LEN].data.numpy())]
-        c1 = captcha_setting.ALL_CHAR_SET[np.argmax(predict_label[0, captcha_setting.ALL_CHAR_SET_LEN:2 * captcha_setting.ALL_CHAR_SET_LEN].data.numpy())]
-        c2 = captcha_setting.ALL_CHAR_SET[np.argmax(predict_label[0, 2 * captcha_setting.ALL_CHAR_SET_LEN:3 * captcha_setting.ALL_CHAR_SET_LEN].data.numpy())]
-        c3 = captcha_setting.ALL_CHAR_SET[np.argmax(predict_label[0, 3 * captcha_setting.ALL_CHAR_SET_LEN:4 * captcha_setting.ALL_CHAR_SET_LEN].data.numpy())]
+        c0 = settings.ALL_CHAR_SET[np.argmax(predict_label[0, 0:settings.ALL_CHAR_SET_LEN].data.numpy())]
+        c1 = settings.ALL_CHAR_SET[np.argmax(predict_label[0, settings.ALL_CHAR_SET_LEN:2 * settings.ALL_CHAR_SET_LEN].data.numpy())]
+        c2 = settings.ALL_CHAR_SET[np.argmax(predict_label[0, 2 * settings.ALL_CHAR_SET_LEN:3 * settings.ALL_CHAR_SET_LEN].data.numpy())]
+        c3 = settings.ALL_CHAR_SET[np.argmax(predict_label[0, 3 * settings.ALL_CHAR_SET_LEN:4 * settings.ALL_CHAR_SET_LEN].data.numpy())]
 
         c = '%s%s%s%s' % (c0, c1, c2, c3)
         print(c)
